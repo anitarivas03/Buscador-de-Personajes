@@ -1,0 +1,392 @@
+/*
+ * ============================================================
+ *  styles.css — Estilos del Buscador de Personajes
+ *  Rick and Morty API  |  Cátedra Lenguajes III - 2026
+ * ============================================================
+ *
+ *  Este archivo complementa a Bootstrap con estilos propios.
+ *  Estructura del archivo:
+ *   1. Importación de fuentes externas
+ *   2. Variables CSS (Custom Properties)
+ *   3. Estilos base del body
+ *   4. Header y portal decorativo
+ *   5. Buscador (input + botón)
+ *   6. Card del personaje
+ *   7. Mensajes de estado
+ *   8. Footer
+ * ============================================================
+ */
+
+
+/*
+ * @import: importa una hoja de estilos externa dentro de este CSS.
+ * Aquí descargamos dos fuentes de Google Fonts:
+ * - Bangers: tipografía estilo cómic para los títulos.
+ * - Roboto: tipografía limpia y moderna para el cuerpo del texto.
+ *   wght@400;700 → cargamos solo los pesos 400 (normal) y 700 (negrita)
+ *   para no descargar variantes innecesarias (optimización de rendimiento).
+ */
+@import url('https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap');
+
+
+/* ─────────────────────────────────────────────────────────────
+ *  VARIABLES CSS (Custom Properties)
+ *
+ *  :root es el selector del elemento raíz del documento (equivale a <html>).
+ *  Declarar variables aquí las hace disponibles en TODO el archivo CSS.
+ *
+ *  Sintaxis de declaración: --nombre-variable: valor;
+ *  Sintaxis de uso:         var(--nombre-variable)
+ *
+ *  Ventaja: si queremos cambiar un color, solo lo modificamos aquí,
+ *  y el cambio se aplica en todos los lugares donde se usa esa variable.
+ *  Es el principio DRY (Don't Repeat Yourself) aplicado a CSS.
+ * ───────────────────────────────────────────────────────────── */
+:root {
+    --rm-green:   #97CE4C;  /* Verde icónico de Rick and Morty */
+    --rm-blue:    #00B5CC;  /* Azul portal */
+    --rm-dark:    #44281D;  /* Marrón oscuro para textos */
+    --rm-alive:   #97CE4C;  /* Color para estado "Alive" */
+    --rm-dead:    #E63946;  /* Color para estado "Dead" */
+    --rm-unknown: #868e96;  /* Color para estado "unknown" */
+}
+
+
+/* ─── BASE ──────────────────────────────────────────────────── */
+/*
+ * Estilos globales del <body>.
+ * - font-family: tipografía principal de todo el sitio. 'sans-serif' es
+ *   el fallback: si Roboto no carga, el navegador usa la sans-serif del sistema.
+ * - min-height: 100vh → el body ocupa al menos el 100% del alto de la pantalla,
+ *   evitando que el footer quede "flotando" en páginas con poco contenido.
+ */
+body {
+    background-color: #ffffff;
+    font-family: 'Roboto', sans-serif;
+    color: #333;
+    min-height: 100vh;
+}
+
+
+/* ─── HEADER ────────────────────────────────────────────────── */
+.rm-header {
+    background-color: #ffffff;
+    border-bottom: 4px solid var(--rm-green); /* Línea verde inferior como detalle */
+    position: relative; /* Necesario para posicionar hijos con position: absolute */
+    overflow: hidden;   /* Recorta cualquier elemento decorativo que se salga */
+}
+
+
+/*
+ * PORTAL DECORATIVO: anillo animado que simula el portal del show.
+ * No es una imagen; se construye completamente con CSS.
+ *
+ * border-radius: 50% → convierte el cuadrado (80x80px) en un círculo perfecto.
+ *
+ * background: radial-gradient(...) → degradado circular:
+ *   - Del centro hacia afuera: azul (0%) → verde (45%) → transparente (46%)
+ *   Esto crea el efecto de anillo hueco (el centro es visible).
+ *
+ * box-shadow: agrega múltiples sombras exteriores superpuestas (separadas por comas).
+ *   Formato: offset-x offset-y blur spread color
+ *   - 0 0 0 4px  → anillo sólido verde justo alrededor del círculo
+ *   - 0 0 0 8px  → anillo más grande con opacidad reducida (rgba)
+ *   - 0 0 20px   → resplandor difuso azul
+ *
+ * animation: hace referencia al @keyframes 'pulsar' definido abajo.
+ *   3s → duración de cada ciclo
+ *   ease-in-out → aceleración suave al inicio y final
+ *   infinite → se repite indefinidamente
+ */
+.portal-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #8536d0 0%, #97CE4C 45%, transparent 46%);
+    box-shadow:
+        0 0 0 4px #23c7bf,
+        0 0 0 8px rgba(48, 57, 234, 0.3),
+        0 0 20px rgba(225, 44, 238, 0.4);
+    animation: pulsar 3s ease-in-out infinite;
+}
+
+/*
+ * @keyframes: define los estados de una animación CSS.
+ * Aquí animamos el box-shadow para simular un pulso de luz.
+ *
+ * 0% y 100% → estado inicial y final (iguales para que el loop sea suave).
+ * 50% → estado intermedio donde el resplandor es más grande e intenso.
+ *
+ * El navegador interpola automáticamente los valores entre estos estados,
+ * creando la transición animada.
+ */
+@keyframes pulsar {
+    0%, 100% { box-shadow: 0 0 0 4px #97CE4C, 0 0 0 8px rgba(151,206,76,.3), 0 0 20px rgba(0,181,204,.4); }
+    50%       { box-shadow: 0 0 0 6px #97CE4C, 0 0 0 14px rgba(151,206,76,.2), 0 0 40px rgba(0,181,204,.6); }
+}
+
+.titulo-principal {
+    font-family: 'Bangers', cursive;
+    font-size: 3.2rem;
+    letter-spacing: 4px;    /* Espaciado entre letras para estilo cómic */
+    color: var(--rm-dark);
+    /*
+     * text-shadow: sombra del texto. Formato: offset-x offset-y blur color.
+     * 3px 3px 0 → desplazamiento diagonal sin difuminado (efecto retro/cómic).
+     */
+    text-shadow: 3px 3px 0 var(--rm-green);
+    margin-bottom: 4px;
+}
+
+.subtitulo {
+    color: var(--rm-blue);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    text-transform: uppercase; /* Convierte el texto a mayúsculas por CSS, sin tocar el HTML */
+}
+
+
+/* ─── BUSCADOR ──────────────────────────────────────────────── */
+.input-busqueda {
+    border: 2px solid var(--rm-green);
+    border-right: none; /* Elimina el borde derecho para que se fusione con el botón */
+    border-radius: 8px 0 0 8px !important;
+    /*
+     * border-radius con 4 valores: superior-izq, superior-der, inferior-der, inferior-izq.
+     * Solo redondeamos la esquina izquierda del input.
+     * !important sobrescribe la especificidad de Bootstrap, que también define border-radius.
+     */
+    padding: 12px 16px;
+    font-size: 1rem;
+    /*
+     * transition: suaviza el cambio de la propiedad border-color en 0.2 segundos.
+     * Sin esto, el cambio sería instantáneo (brusco) al enfocar el campo.
+     */
+    transition: border-color 0.2s;
+}
+
+/*
+ * Pseudo-clase :focus: se activa cuando el usuario hace clic en el input
+ * o navega hasta él con la tecla Tab.
+ * Cambiamos el borde a azul para indicar que el campo está activo.
+ * box-shadow agrega un resplandor sutil alrededor del input.
+ */
+.input-busqueda:focus {
+    border-color: var(--rm-blue);
+    box-shadow: 0 0 0 0.2rem rgba(0, 181, 204, 0.25);
+}
+
+.btn-buscar {
+    background-color: var(--rm-green);
+    color: #fff;
+    font-weight: 700;
+    border: 2px solid var(--rm-green);
+    border-radius: 0 8px 8px 0 !important; /* Solo redondeamos la esquina derecha */
+    padding: 12px 28px;
+    letter-spacing: 1px;
+    font-size: 1rem;
+    /* transition con múltiples propiedades separadas por coma */
+    transition: background-color 0.25s, border-color 0.25s;
+}
+
+/*
+ * :hover → cuando el cursor está encima del botón.
+ * :focus → cuando el botón está seleccionado por teclado (Tab).
+ * Listamos ambas pseudo-clases juntas porque queremos el mismo estilo en los dos casos.
+ */
+.btn-buscar:hover,
+.btn-buscar:focus {
+    background-color: var(--rm-blue);
+    border-color: var(--rm-blue);
+    color: #fff;
+}
+
+.hint-text {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+
+/* ─── CARD DEL PERSONAJE ────────────────────────────────────── */
+/*
+ * Estilo base de la card. Nótese que NO tiene borde de color aquí;
+ * el color del borde superior se define en las clases .alive, .dead, .unknown
+ * que se agregan DINÁMICAMENTE desde JavaScript (classList / innerHTML).
+ */
+.personaje-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;   /* Recorta la imagen para que respete el border-radius de la card */
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.10);
+    width: 340px;
+    border-top: 6px solid var(--rm-unknown); /* Color por defecto: gris */
+    /*
+     * transition en múltiples propiedades: cuando la card cambia de posición
+     * (al hacer hover) o de sombra, el cambio se anima suavemente en 0.25s.
+     */
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+/*
+ * :hover → al pasar el cursor sobre la card, la "levantamos" 6px hacia arriba
+ * usando transform: translateY (traslación en el eje Y).
+ * Valores negativos van hacia arriba. Combinado con más sombra, da efecto 3D.
+ */
+.personaje-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+}
+
+/*
+ * Clases de estado: modifican SOLO el color del borde superior de la card.
+ * Estas clases se agregan al elemento en JavaScript según el status del personaje.
+ * Patrón de diseño: clase base (.personaje-card) + clase modificadora (.alive, .dead, .unknown).
+ * Esto se llama patrón BEM (Block Element Modifier) en CSS.
+ */
+.personaje-card.alive   { border-top-color: var(--rm-alive);   }
+.personaje-card.dead    { border-top-color: var(--rm-dead);    }
+.personaje-card.unknown { border-top-color: var(--rm-unknown); }
+
+.card-img-personaje {
+    width: 100%;
+    height: 300px;
+    /*
+     * object-fit: cover → la imagen cubre todo el espacio disponible
+     * manteniendo sus proporciones (aspect ratio). Si la imagen es más grande,
+     * la recorta. Evita que la imagen se deforme.
+     */
+    object-fit: cover;
+    display: block; /* Elimina el espacio inferior que dejan las imágenes en línea por defecto */
+}
+
+.card-body-rm {
+    padding: 1.4rem 1.6rem 1.6rem; /* top | lados | bottom */
+}
+
+.card-nombre {
+    font-family: 'Bangers', cursive;
+    font-size: 2rem;
+    letter-spacing: 1.5px;
+    color: var(--rm-dark);
+    line-height: 1; /* Interlineado ajustado para títulos grandes */
+    margin-bottom: 8px;
+}
+
+
+/* ─── BADGE DE ESTADO ───────────────────────────────────────── */
+/*
+ * El badge es la "pastilla" de color que muestra el estado del personaje.
+ *
+ * display: inline-flex → permite usar flexbox en un elemento en línea.
+ * align-items: center → centra el punto y el texto verticalmente.
+ * gap: 6px → espacio entre el punto (::before) y el texto.
+ * border-radius: 20px → con un valor grande en relación al tamaño,
+ *                       produce bordes completamente redondeados (forma de píldora).
+ */
+.badge-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+/*
+ * ::before: pseudo-elemento que inserta contenido ANTES del contenido real del elemento.
+ * Aquí creamos el pequeño punto de color dentro del badge.
+ * content: '' → es obligatorio declarar content para que el pseudo-elemento exista,
+ *               aunque esté vacío; su apariencia viene de width, height y border-radius.
+ */
+.badge-estado::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%; /* Círculo perfecto */
+    background: rgba(255, 255, 255, 0.8); /* Blanco semi-transparente */
+}
+
+/* Colores de fondo del badge según el estado */
+.badge-alive   { background-color: var(--rm-alive);   }
+.badge-dead    { background-color: var(--rm-dead);    }
+.badge-unknown { background-color: var(--rm-unknown); }
+
+
+/* ─── FILAS DE INFORMACIÓN ──────────────────────────────────── */
+/*
+ * Cada fila de info (especie, ubicación) tiene un separador inferior
+ * excepto la última, que usa el selector :last-child.
+ */
+.info-row {
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/*
+ * :last-child → selecciona el último hijo de su tipo dentro del padre.
+ * Elimina el borde inferior de la última fila para no tener una línea
+ * al final de la card.
+ */
+.info-row:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.info-label {
+    font-size: 0.70rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #aaa; /* Gris claro para la etiqueta, generando jerarquía visual */
+    margin-bottom: 1px;
+}
+
+.info-value {
+    font-weight: 700;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+
+/* ─── MENSAJES DE ESTADO ────────────────────────────────────── */
+/*
+ * Contenedor de mensajes (campo vacío, error de búsqueda).
+ * Usamos flexbox para centrar el contenido tanto horizontal como verticalmente.
+ *   flex-direction: column → los hijos se apilan verticalmente.
+ *   align-items: center → centrado horizontal en un flex-direction: column.
+ *   gap: 8px → espacio entre el ícono, texto principal y subtexto.
+ */
+.msg-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 2rem;
+}
+
+.msg-icon  { font-size: 2.5rem; }
+.msg-texto { font-weight: 700; font-size: 1.1rem; color: var(--rm-dark); }
+.msg-sub   { font-size: 0.85rem; color: #888; }
+
+
+/* ─── FOOTER ────────────────────────────────────────────────── */
+.rm-footer {
+    border-top: 2px solid #f0f0f0;
+    color: #aaa;
+    font-size: 0.8rem;
+}
+
+.rm-footer a {
+    color: var(--rm-blue);
+    text-decoration: none; /* Elimina el subrayado por defecto de los enlaces */
+    font-weight: 700;
+}
+
+/* :hover en el enlace del footer: restaura el subrayado para dar feedback visual */
+.rm-footer a:hover {
+    text-decoration: underline;
+}

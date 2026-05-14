@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Buscador Rick and Morty</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="stylestp7.css">
+</head>
+<body>
+
+    <header class="rm-header py-4 mb-5">
+        <div class="container d-flex align-items-center gap-4">
+
+            <div class="portal-ring"></div>
+
+            <div>
+                <h1 class="titulo-principal mb-0">Buscador de Personajes</h1>
+                <p class="subtitulo mb-0">Rick &amp; Morty · API Explorer</p>
+            </div>
+
+        </div>
+    </header>
+
+    <main class="container" style="max-width: 600px;">
+
+        <!-- Input y botón -->
+        <div class="d-flex mb-2">
+
+            <input
+                type="text"
+                id="busqueda"
+                class="form-control input-busqueda"
+                placeholder="Ingresá un nombre o un ID"
+            >
+
+            <button id="btnBuscar" class="btn btn-buscar">
+                Buscar
+            </button>
+
+        </div>
+
+        <p class="hint-text mb-4">Ejemplo: <strong>Rick</strong> o <strong>1</strong></p>
+
+        
+        <div id="resultado"></div>
+
+    </main>
+    <!-- FOOTER -->
+    <footer class="rm-footer text-center py-4 mt-5">
+        <div class="container">
+            Datos obtenidos de la
+            <a href="https://rickandmortyapi.com" target="_blank">Rick and Morty API</a>
+            · Lenguajes III 2026
+        </div>
+    </footer>
+
+
+    <script src="tp7script.js"></script>
+
+</body>
+</html>
